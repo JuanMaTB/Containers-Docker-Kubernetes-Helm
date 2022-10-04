@@ -1,0 +1,29 @@
+version: '3.9'
+
+services:
+  app:
+    environment:
+      MYSQL_DB: "keepnotes"
+      MYSQL_USER: "keepuser"
+      MYSQL_PASSWORD: "keeppass"
+      MYSQL_HOST: "db"
+    build: ./app
+    ports:
+     - 5000:5000
+    depends_on:
+      - db
+  db:
+    image: mysql
+    ports:
+     - "32000:3306"
+    environment:
+     MYSQL_ROOT_PASSWORD: "root1234"
+     MYSQL_DATABASE: "keepnotes"
+     MYSQL_USER: "keepuser"
+     MYSQL_PASSWORD: "keeppass"
+    volumes:
+     - "./keepnotes.sql:/docker-entrypoint-initdb.d/keepnotes.sql"
+     - "mysql-data:/var/lib/mysql"
+
+volumes:
+ mysql-data:

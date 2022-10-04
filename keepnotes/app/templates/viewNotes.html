@@ -1,0 +1,33 @@
+{% extends 'layout.html' %}
+
+{% block title %}View Notes | KeepNotes{% endblock %}
+
+{% block content %}
+<h2>View Notes</h2>
+<script>
+    function successMessage()
+    {
+        alert("Note successfully deleted!");
+    }
+</script>
+<div>
+    <p>Your notes are below:</p>
+    <table style="border-spacing:0 10px;">
+        {% for item in data %}
+        <tr>
+            <td>{{loop.index}}</td>
+            <td>{{item['content']}}</td>
+            <form action = "{{ url_for('deleteNote') }}" method="post">
+                <input type="hidden" name="noteid" value="{{item['noteid']}}" id="noteid">
+                <td><input type = "submit" value = "Delete Note"></td>
+            </form>
+            <form action = "{{ url_for('editNoteView') }}" method="post">
+                <input type="hidden" name="noteid" value="{{item['noteid']}}" id="noteid">
+                <td><input type = "submit" value = "Edit Note"></td>
+            </form>
+            <!--<td>{{item['userid']}}</td>-->
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+{% endblock %}

@@ -1,0 +1,25 @@
+{{- $name := include "keepnotes.fullname" . -}}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ $name }}
+  {{- with .Values.ingress.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  rules:
+  {{- range .Values.ingress.hosts }}
+    - host: {{ .host | quote }}
+      http:
+        paths:
+        {{- range .paths }}
+          - pathType: Prefix
+            path: {{ . | quote }}
+            backend:
+              service:
+                name: {{ $name }}-app
+                port:
+                  number: 5000
+      {{- end }}
+  {{- end }}

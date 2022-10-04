@@ -1,0 +1,37 @@
+{% extends 'layout.html' %}
+
+{% block title %}Profile | KeepNotes{% endblock %}
+
+{% block content %}
+<h2>User Profile</h2>
+<div>
+    <p>Your account details are below:</p>
+    <table>
+        <tr>
+            <td>Name:</td>
+            <td>{{ account['name'] }}</td>
+        </tr>
+        <tr>
+            <td>Email:</td>
+            <td>{{ account['email'] }}</td>
+        </tr>
+        <tr>
+            <td>Password:</td>
+            <td>{{ account['password'] }}</td>
+        </tr>
+        <tr>
+            <td>
+                <form action = "{{ url_for('editProfileView') }}" method="post">
+                <input type="submit" value="Edit Profile">
+                </form>
+            </td>
+            <td>
+                <form action = "{{ url_for('deleteProfile') }}" method="post">
+                <input type="submit" value="Delete Profile">
+                </form>
+            </td>
+        </tr>
+    </table>
+</div>
+
+{% endblock %}

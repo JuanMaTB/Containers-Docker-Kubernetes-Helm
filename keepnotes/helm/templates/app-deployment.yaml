@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "keepnotes.fullname" . }}-app
+  labels:
+    {{- include "keepnotes.labels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "keepnotes.selectorLabels" . | nindent 6 }}
+      layer: app
+  replicas: {{ .Values.replicaCount }}
+  template:
+    metadata:
+      labels:
+        {{- include "keepnotes.selectorLabels" . | nindent 8 }}
+        layer: app
+    spec:
+      containers:
+        - image: {{ .Values.image.app }}
+          name: counter-app
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - containerPort: 5000
+          env:
+            - name: MYSQL_HOST
+              valueFrom:
+               configMapKeyRef:
+                name: cmdb
+                key: host
+            - name: MYSQL_DB
+              valueFrom:
+               configMapKeyRef:
+                name: cmdb
+                key: dbname
+            - name: MYSQL_PASSWORD
+              valueFrom:
+               secretKeyRef:
+                name: {{ include "keepnotes.fullname" . }}-secret
+                key: userpassword
+            - name: MYSQL_USER
+              valueFrom:
+               secretKeyRef:
+                name: {{ include "keepnotes.fullname" . }}-secret
+                key: username

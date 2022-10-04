@@ -1,0 +1,7 @@
+apiVersion: v1
+data:
+  dbname: keepnotes
+  host: db
+kind: ConfigMap
+metadata:
+  name: cmdb

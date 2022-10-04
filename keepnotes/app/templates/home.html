@@ -1,0 +1,23 @@
+{% extends 'layout.html' %}
+
+{% block title %}Home | keepnotes{% endblock %}
+
+{% block content %}
+<h2>Home</h2>
+<table>
+	<tr>
+        <td>
+            <div class="links">
+                <a href="{{ url_for('addNoteView') }}">Add Note</a>  
+            </div>
+        </td>
+        <td></td>
+        <td></td>
+        <td>
+            <div class="links">
+                <a href="{{ url_for('viewNotes') }}">View All Notes</a>
+            </div>
+        </td>
+    </tr>
+</table>
+{% endblock %}

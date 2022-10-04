@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: db
+  name: db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: db
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: db
+    spec:
+      containers:
+      - image: mysql
+        name: db
+        env:
+          - name: MYSQL_DATABASE
+            valueFrom:
+              configMapKeyRef:
+                name: cmdb
+                key: dbname
+          - name: MYSQL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ include "keepnotes.fullname" . }}-secret
+                key: userpassword
+          - name: MYSQL_HOST
+            valueFrom:
+              configMapKeyRef:
+                name: cmdb
+                key: host
+          - name: MYSQL_ROOT_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ include "keepnotes.fullname" . }}-secret
+                key: rootpassword
+          - name: MYSQL_USER
+            valueFrom:
+              secretKeyRef:
+                name: {{ include "keepnotes.fullname" . }}-secret
+                key: username
+        ports:
+        - containerPort: 3306
+        volumeMounts:
+        - name: mysql-data
+          mountPath: /var/lib/mysql
+        - name: confidb
+          mountPath: /docker-entrypoint-initdb.d
+      volumes:
+        - name: mysql-data
+          persistentVolumeClaim:
+            claimName: {{ include "keepnotes.fullname" . }}-mysql-pvc
+        - name: confidb
+          configMap:
+            name: confidb
+            items:
+              - key: keepnotes.sql
+                path: keepnotes.sql
+            defaultMode: 0777
+        
